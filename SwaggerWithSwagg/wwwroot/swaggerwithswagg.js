@@ -90,6 +90,9 @@
         // Clear cache when switching endpoints
         clearSwaggerSpecCache();
         
+        // Load minimized tabs from localStorage
+        loadMinimizedTabs();
+        
         initializeSwaggerUI();
     };
 
@@ -1235,10 +1238,15 @@
                     <span style="color: var(--text-primary); font-family: 'Monaco', 'Consolas', monospace; font-size: 16px;">${path}</span>
                 </div>
                 <div style="display: flex; gap: 8px;">
-                    <button onclick="togglePanelSize()" id="maximizeBtn" title="Maximize" style="background: transparent; border: none; color: var(--text-secondary); cursor: pointer; font-size: 20px; padding: 0; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">
+                    <button onclick="minimizeTryItPanel('${method}', '${escapeHtml(path)}')" title="Minimize" style="background: transparent; border: none; color: var(--text-secondary); cursor: pointer; font-size: 18px; padding: 0; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 4px; transition: all 0.2s;" onmouseover="this.style.background='var(--hover-bg)'; this.style.color='var(--text-primary)'" onmouseout="this.style.background='transparent'; this.style.color='var(--text-secondary)'">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                    </button>
+                    <button onclick="togglePanelSize()" id="maximizeBtn" title="Maximize" style="background: transparent; border: none; color: var(--text-secondary); cursor: pointer; font-size: 20px; padding: 0; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 4px; transition: all 0.2s;" onmouseover="this.style.background='var(--hover-bg)'; this.style.color='var(--text-primary)'" onmouseout="this.style.background='transparent'; this.style.color='var(--text-secondary)'">
                         ⛶
                     </button>
-                    <button onclick="closeTryItPanel()" style="background: transparent; border: none; color: var(--text-secondary); cursor: pointer; font-size: 24px; padding: 0; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">
+                    <button onclick="closeTryItPanel()" style="background: transparent; border: none; color: var(--text-secondary); cursor: pointer; font-size: 24px; padding: 0; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 4px; transition: all 0.2s;" onmouseover="this.style.background='var(--hover-bg)'; this.style.color='var(--text-primary)'" onmouseout="this.style.background='transparent'; this.style.color='var(--text-secondary)'">
                         ×
                     </button>
                 </div>
@@ -1447,6 +1455,7 @@
                                     id="requestBody" 
                                     rows="12"
                                     style="width: 100%; padding: 12px; background: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-primary); font-family: 'Monaco', 'Consolas', monospace; font-size: 13px; line-height: 1.5; resize: vertical; outline: none; box-sizing: border-box;"
+                                    oninput="saveCurrentPanelState()"
                                 >${bodyStr}</textarea>
                             </div>
                             
@@ -1954,7 +1963,56 @@
             input.style.borderColor = '#f93e3e';
         }
         
+        // Auto-save parameter value to cache
+        saveCurrentPanelState();
+        
         return isValid;
+    };
+
+    // Auto-save current panel state (parameters and request body)
+    window.saveCurrentPanelState = function() {
+        if (!window.currentOperation) return;
+        
+        const op = window.currentOperation;
+        const method = op.method;
+        const path = op.path;
+        
+        // Collect parameter values
+        const parameters = {};
+        if (op.operation.parameters) {
+            op.operation.parameters.forEach((param, index) => {
+                const input = document.getElementById(`param-${index}`);
+                if (input && input.value) {
+                    parameters[param.name] = input.value;
+                }
+            });
+        }
+        
+        // Get request body if exists
+        let requestBody = null;
+        const requestBodyTextarea = document.getElementById('requestBody');
+        if (requestBodyTextarea) {
+            requestBody = requestBodyTextarea.value;
+        }
+        
+        // Get content type
+        const contentTypeSelector = document.getElementById('contentTypeSelector');
+        const contentType = contentTypeSelector ? contentTypeSelector.value : 'application/json';
+        
+        // Get custom headers
+        const customHeaders = getCustomHeaders();
+        
+        // Load existing cache to preserve response data
+        const existingCache = loadTryItCache(method, path) || {};
+        
+        // Save to cache
+        saveTryItCache(method, path, {
+            ...existingCache,
+            parameters: parameters,
+            requestBody: requestBody,
+            contentType: contentType,
+            customHeaders: Object.keys(customHeaders).map(key => ({ key, value: customHeaders[key] }))
+        });
     };
 
     window.validateAllParameters = function() {
@@ -2524,4 +2582,154 @@
             console.error('Failed to copy:', err);
         });
     };
+
+    // Minimized Tabs Management
+    const minimizedTabs = new Map(); // Store minimized panel data
+    const MINIMIZED_TABS_KEY = 'swaggerWithSwagg_minimizedTabs';
+
+    // Load minimized tabs from localStorage on startup
+    function loadMinimizedTabs() {
+        try {
+            const saved = localStorage.getItem(MINIMIZED_TABS_KEY);
+            if (saved) {
+                const tabsArray = JSON.parse(saved);
+                tabsArray.forEach(tab => {
+                    const tabKey = `${tab.method}:${tab.path}`;
+                    minimizedTabs.set(tabKey, tab);
+                });
+                updateMinimizedTabsBar();
+            }
+        } catch (e) {
+            console.error('Failed to load minimized tabs:', e);
+        }
+    }
+
+    // Save minimized tabs to localStorage
+    function saveMinimizedTabs() {
+        try {
+            const tabsArray = Array.from(minimizedTabs.values());
+            localStorage.setItem(MINIMIZED_TABS_KEY, JSON.stringify(tabsArray));
+        } catch (e) {
+            console.error('Failed to save minimized tabs:', e);
+        }
+    }
+
+    window.minimizeTryItPanel = function(method, path) {
+        const panel = document.getElementById('tryItPanel');
+        const overlay = document.getElementById('tryItOverlay');
+        
+        if (!panel || !overlay) return;
+
+        // Save current state before minimizing
+        saveCurrentPanelState();
+
+        // Generate unique key for this tab
+        const tabKey = `${method}:${path}`;
+        
+        // Store the panel state
+        minimizedTabs.set(tabKey, {
+            method: method,
+            path: path,
+            operation: window.currentOperation,
+            html: panel.innerHTML,
+            isMaximized: panel.classList.contains('maximized')
+        });
+
+        // Save to localStorage
+        saveMinimizedTabs();
+
+        // Hide the panel
+        panel.classList.remove('open');
+        panel.classList.add('minimized');
+        overlay.style.display = 'none';
+
+        // Update minimized tabs bar
+        updateMinimizedTabsBar();
+    };
+
+    window.restoreMinimizedTab = function(tabKey) {
+        const panel = document.getElementById('tryItPanel');
+        const overlay = document.getElementById('tryItOverlay');
+        
+        if (!panel || !overlay) return;
+
+        const tabData = minimizedTabs.get(tabKey);
+        if (!tabData) return;
+
+        // Restore panel content
+        panel.innerHTML = tabData.html;
+        window.currentOperation = tabData.operation;
+
+        // Restore maximized state
+        if (tabData.isMaximized) {
+            panel.classList.add('maximized');
+        } else {
+            panel.classList.remove('maximized');
+        }
+
+        // Show the panel
+        panel.classList.remove('minimized');
+        panel.classList.add('open');
+        overlay.style.display = 'block';
+
+        // Remove from minimized tabs
+        minimizedTabs.delete(tabKey);
+
+        // Save to localStorage
+        saveMinimizedTabs();
+
+        // Update minimized tabs bar
+        updateMinimizedTabsBar();
+    };
+
+    window.closeMinimizedTab = function(tabKey, event) {
+        if (event) {
+            event.stopPropagation();
+        }
+
+        // Remove from minimized tabs
+        minimizedTabs.delete(tabKey);
+
+        // Save to localStorage
+        saveMinimizedTabs();
+
+        // Update minimized tabs bar
+        updateMinimizedTabsBar();
+    };
+
+    function updateMinimizedTabsBar() {
+        const tabsBar = document.getElementById('minimizedTabsBar');
+        if (!tabsBar) return;
+
+        // Show/hide tabs bar based on whether there are minimized tabs
+        if (minimizedTabs.size === 0) {
+            tabsBar.classList.remove('visible');
+            return;
+        }
+
+        tabsBar.classList.add('visible');
+
+        // Build tabs HTML
+        let tabsHtml = '';
+        minimizedTabs.forEach((tabData, tabKey) => {
+            const methodClass = `method-${tabData.method.toLowerCase()}`;
+            const escapedPath = escapeHtml(tabData.path);
+            
+            tabsHtml += `
+                <div class="minimized-tab" onclick="restoreMinimizedTab('${tabKey}')" title="Click to restore">
+                    <span class="minimized-tab-method ${methodClass}">${tabData.method.toUpperCase()}</span>
+                    <span class="minimized-tab-path">${escapedPath}</span>
+                    <span class="minimized-tab-close" onclick="closeMinimizedTab('${tabKey}', event)" title="Close">×</span>
+                </div>
+            `;
+        });
+
+        tabsBar.innerHTML = tabsHtml;
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
 })();

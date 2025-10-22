@@ -1348,6 +1348,89 @@ namespace SwaggerWithSwagg
             max-width: 50%;
         }}
 
+        .try-it-panel.minimized {{
+            display: none;
+        }}
+
+        /* Minimized Tabs Bar */
+        .minimized-tabs-bar {{
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            left: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            border-top: 2px solid var(--border-color);
+            padding: 8px 16px;
+            display: none;
+            gap: 8px;
+            align-items: center;
+            z-index: 9997;
+            overflow-x: auto;
+            overflow-y: hidden;
+            max-height: 60px;
+        }}
+
+        .minimized-tabs-bar.visible {{
+            display: flex;
+        }}
+
+        .minimized-tab {{
+            background: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px 6px 0 0;
+            padding: 8px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            min-width: 200px;
+            max-width: 300px;
+            position: relative;
+        }}
+
+        .minimized-tab:hover {{
+            background: var(--hover-bg);
+            border-color: var(--orange);
+        }}
+
+        .minimized-tab-method {{
+            font-weight: 700;
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 3px;
+            min-width: 50px;
+            text-align: center;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }}
+
+        .minimized-tab-path {{
+            font-size: 11px;
+            color: var(--text-primary);
+            font-family: 'Monaco', 'Consolas', monospace;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+        }}
+
+        .minimized-tab-close {{
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 3px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }}
+
+        .minimized-tab-close:hover {{
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }}
+
         .try-it-panel-header {{
             padding: 24px;
             border-bottom: 1px solid var(--border-color);
@@ -1641,6 +1724,9 @@ namespace SwaggerWithSwagg
     <!-- Try It Out Panel -->
     <div id=""tryItOverlay"" class=""try-it-overlay"" onclick=""closeTryItPanel()""></div>
     <div id=""tryItPanel"" class=""try-it-panel""></div>
+    
+    <!-- Minimized Tabs Bar -->
+    <div id=""minimizedTabsBar"" class=""minimized-tabs-bar""></div>
 
     <script src=""/{_options.RoutePrefix}/swagger-ui-bundle.min.js""></script>
     <script src=""/{_options.RoutePrefix}/swagger-ui-standalone-preset.min.js""></script>
