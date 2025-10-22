@@ -69,25 +69,6 @@ jobs:
       env:
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 
-    - name: Create GitHub Release
-      uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        files: ./artifacts/*.nupkg
-        generate_release_notes: true
-        body: |
-          ## SwaggerWithSwagg v${{ steps.get_version.outputs.VERSION }}
-          
-          ### Installation
-          ```bash
-          dotnet add package SwaggerWithSwagg --version ${{ steps.get_version.outputs.VERSION }}
-          ```
-          
-          ### What's Changed
-          See release notes below.
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
