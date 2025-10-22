@@ -48,6 +48,9 @@
         swaggerSpecPromise = null;
     }
 
+    // Expose getSwaggerSpec globally for use in HTML script tags
+    window.getSwaggerSpec = getSwaggerSpec;
+
     // Utility: Syntax highlight JSON
     window.syntaxHighlightJSON = function(json) {
         if (typeof json !== 'string') {

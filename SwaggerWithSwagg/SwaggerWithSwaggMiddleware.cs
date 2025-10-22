@@ -1732,8 +1732,8 @@ namespace SwaggerWithSwagg
         
         async function loadAuthSchemes() {{
             try {{
-                const response = await fetch('{_options.SwaggerEndpoint}');
-                const spec = await response.json();
+                // Use cached swagger spec instead of fetching
+                const spec = await getSwaggerSpec();
                 
                 securitySchemes = spec.components?.securitySchemes || {{}};
                 renderAuthSchemes(securitySchemes);
