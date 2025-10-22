@@ -115,7 +115,7 @@ namespace SwaggerWithSwagg
     <meta charset=""UTF-8"">
     <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
     <title>{_options.DocumentTitle}</title>
-    <link rel=""stylesheet"" href=""{_options.RoutePrefix}/swagger-ui.min.css"" />
+    <link rel=""stylesheet"" href=""/{_options.RoutePrefix}/swagger-ui.min.css"" />
     <style>
         :root {{
             --orange: #FF6C37;
@@ -1642,9 +1642,9 @@ namespace SwaggerWithSwagg
     <div id=""tryItOverlay"" class=""try-it-overlay"" onclick=""closeTryItPanel()""></div>
     <div id=""tryItPanel"" class=""try-it-panel""></div>
 
-    <script src=""{_options.RoutePrefix}/swagger-ui-bundle.min.js""></script>
-    <script src=""{_options.RoutePrefix}/swagger-ui-standalone-preset.min.js""></script>
-    <script src=""{_options.RoutePrefix}/swaggerwithswagg.js""></script>
+    <script src=""/{_options.RoutePrefix}/swagger-ui-bundle.min.js""></script>
+    <script src=""/{_options.RoutePrefix}/swagger-ui-standalone-preset.min.js""></script>
+    <script src=""/{_options.RoutePrefix}/swaggerwithswagg.js""></script>
     <script>
         // Theme Management
         const THEME_KEY = 'swaggerwithswagg-theme';

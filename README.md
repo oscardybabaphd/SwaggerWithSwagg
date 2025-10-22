@@ -2,7 +2,8 @@
 
 **SwaggerWithSwagg** is an enhanced Swagger UI library for ASP.NET Core that provides a modern, Postman-like interface for testing and documenting your APIs.
 
-![SwaggerWithSwagg Banner](https://img.shields.io/badge/SwaggerWithSwagg-Enhanced_Swagger_UI-orange?style=for-the-badge)
+
+---
 
 ## ✨ Features
 

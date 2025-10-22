@@ -4,6 +4,49 @@
 
     // Configuration (will be set by the page)
     let SWAGGER_ENDPOINT = '/swagger/v1/swagger.json';
+    
+    // Cache for swagger specification to avoid repeated fetches
+    let swaggerSpecCache = null;
+    let swaggerSpecPromise = null;
+
+    // Utility: Fetch and cache swagger specification
+    async function getSwaggerSpec(forceRefresh = false) {
+        // Return cached spec if available and not forcing refresh
+        if (swaggerSpecCache && !forceRefresh) {
+            return swaggerSpecCache;
+        }
+        
+        // If a fetch is already in progress, return that promise
+        if (swaggerSpecPromise && !forceRefresh) {
+            return swaggerSpecPromise;
+        }
+        
+        // Fetch the swagger spec
+        swaggerSpecPromise = fetch(SWAGGER_ENDPOINT)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(spec => {
+                swaggerSpecCache = spec;
+                swaggerSpecPromise = null;
+                return spec;
+            })
+            .catch(error => {
+                swaggerSpecPromise = null;
+                throw error;
+            });
+        
+        return swaggerSpecPromise;
+    }
+
+    // Clear cache (useful when switching versions)
+    function clearSwaggerSpecCache() {
+        swaggerSpecCache = null;
+        swaggerSpecPromise = null;
+    }
 
     // Utility: Syntax highlight JSON
     window.syntaxHighlightJSON = function(json) {
@@ -40,6 +83,10 @@
     window.initSwaggerWithSwagg = function(config) {
         SWAGGER_ENDPOINT = config.swaggerEndpoint || SWAGGER_ENDPOINT;
         window.currentSwaggerEndpoint = SWAGGER_ENDPOINT; // Store for API info link
+        
+        // Clear cache when switching endpoints
+        clearSwaggerSpecCache();
+        
         initializeSwaggerUI();
     };
 
@@ -92,8 +139,7 @@
     // API Tree Management
     async function loadApiTree() {
         try {
-            const response = await fetch(SWAGGER_ENDPOINT);
-            const spec = await response.json();
+            const spec = await getSwaggerSpec();
             renderApiInfo(spec);
             renderApiTree(spec);
         } catch (e) {
@@ -256,9 +302,8 @@
         detailContainer.classList.add('active');
 
         try {
-            // Fetch the OpenAPI spec to get endpoint details
-            const response = await fetch(SWAGGER_ENDPOINT);
-            const spec = await response.json();
+            // Use cached OpenAPI spec to get endpoint details
+            const spec = await getSwaggerSpec();
 
             // Find the endpoint in the spec
             const pathItem = spec.paths[path];
@@ -2048,9 +2093,8 @@
                 options.headers[key] = customHeaders[key];
             });
 
-            // Check if this endpoint requires authorization
-            const specResponse = await fetch(SWAGGER_ENDPOINT);
-            const spec = await specResponse.json();
+            // Check if this endpoint requires authorization (use cached spec)
+            const spec = await getSwaggerSpec();
             const securitySchemes = spec.components?.securitySchemes || {};
             const operationSecurity = op.operation.security || spec.security || [];
             const requiresAuth = operationSecurity.length > 0;
