@@ -213,7 +213,26 @@ Navigate to `http://localhost:5293/swagger` to see SwaggerWithSwagg in action.
 
 ---
 
-## 📝 License
+## � Appendix - Screenshots
+
+### Main Interface
+![SwaggerWithSwagg Main Interface](sample_screenshot/Screenshot%202025-10-22%20131743.png)
+
+### API Version Selector
+![API Version Selector](sample_screenshot/Screenshot%202025-10-22%20131822.png)
+
+### Try It Out Panel
+![Try It Out Panel](sample_screenshot/Screenshot%202025-10-22%20131903.png)
+
+### Request Execution
+![Request Execution](sample_screenshot/Screenshot%202025-10-22%20131931.png)
+
+### Response Display
+![Response Display](sample_screenshot/Screenshot%202025-10-22%20132017.png)
+
+---
+
+## �📝 License
 
 MIT License
 
