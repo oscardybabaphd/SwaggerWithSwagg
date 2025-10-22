@@ -119,12 +119,12 @@ namespace SwaggerWithSwagg
         /// <summary>
         /// The name/label of the version (e.g., "v1", "v2", "Beta")
         /// </summary>
-        public required string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// The endpoint URL for this version's Swagger JSON
         /// </summary>
-        public required string Endpoint { get; set; }
+        public string Endpoint { get; set; } = string.Empty;
 
         /// <summary>
         /// Optional description of this version

@@ -15,19 +15,22 @@ internal class MinimalApiMetadataFilter : IOperationFilter
         
         if (endpointMetadata != null)
         {
-            // Look for IEndpointSummaryMetadata (from WithSummary)
+#if NET7_0_OR_GREATER
+            // Look for IEndpointSummaryMetadata (from WithSummary) - Available in .NET 7+
             var summaryMetadata = endpointMetadata.OfType<Microsoft.AspNetCore.Http.Metadata.IEndpointSummaryMetadata>().FirstOrDefault();
             if (summaryMetadata != null && !string.IsNullOrEmpty(summaryMetadata.Summary))
             {
                 operation.Summary = summaryMetadata.Summary;
             }
 
-            // Look for IEndpointDescriptionMetadata (from WithDescription)
+            // Look for IEndpointDescriptionMetadata (from WithDescription) - Available in .NET 7+
             var descriptionMetadata = endpointMetadata.OfType<Microsoft.AspNetCore.Http.Metadata.IEndpointDescriptionMetadata>().FirstOrDefault();
             if (descriptionMetadata != null && !string.IsNullOrEmpty(descriptionMetadata.Description))
             {
                 operation.Description = descriptionMetadata.Description;
             }
+#endif
+            // Note: .NET 6 users should use XML comments or ApiExplorerSettings for documentation
         }
     }
 }
