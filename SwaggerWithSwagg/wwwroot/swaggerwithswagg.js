@@ -321,10 +321,10 @@
             const operation = pathItem[method.toLowerCase()];
             
             // Debug: Log the entire operation to see what we're getting
-            console.log('Full operation object:', JSON.stringify(operation, null, 2));
-            console.log('Summary:', operation.summary);
-            console.log('Description:', operation.description);
-            console.log('Tags:', operation.tags);
+            // console.log('Full operation object:', JSON.stringify(operation, null, 2));
+            // console.log('Summary:', operation.summary);
+            // console.log('Description:', operation.description);
+            // console.log('Tags:', operation.tags);
             
             // Build the detail view
             const html = buildEndpointDetailView(method, path, operation, spec);
@@ -351,7 +351,7 @@
         const description = operation.description || '';
         const operationId = operation.operationId || `${method.toLowerCase()}_${path.replace(/\//g, '_')}`;
 
-        console.log('Operation details:', { method, path, summary, description, operation });
+        //console.log('Operation details:', { method, path, summary, description, operation });
 
         // Check for security requirements
         const securitySchemes = spec.components?.securitySchemes || {};
@@ -1468,6 +1468,7 @@
                             </div>
                             
                             <textarea id="requestBodyData" style="display: none;">${bodyStr}</textarea>
+                            <textarea id="requestBodyOriginal" style="display: none;">${JSON.stringify(exampleBody, null, 2)}</textarea>
                         </div>
                     `;
                 }
@@ -2125,14 +2126,14 @@
         try {
             const op = window.currentOperation;
             let url = path;
-            console.log('Initial URL:', url);
+           // console.log('Initial URL:', url);
 
             // Replace path parameters
             if (op.operation.parameters) {
                 op.operation.parameters.forEach((param, index) => {
                     const input = document.getElementById(`param-${index}`);
                     if (input && input.value) {
-                        console.log(`Parameter ${param.name} (${param.in}):`, input.value);
+                        //console.log(`Parameter ${param.name} (${param.in}):`, input.value);
                         if (param.in === 'path') {
                             url = url.replace(`{${param.name}}`, encodeURIComponent(input.value));
                         } else if (param.in === 'query') {
@@ -2143,7 +2144,7 @@
                 });
             }
             
-            console.log('Final URL:', url);
+           // console.log('Final URL:', url);
 
             // Get the selected content type from dropdown, default to application/json
             const contentTypeSelector = document.getElementById('contentTypeSelector');
@@ -2449,6 +2450,7 @@
     };
 
     window.clearTryItResponse = function() {
+        // Clear response section
         const responseContent = document.getElementById('tryItResponseContent');
         if (responseContent) {
             responseContent.innerHTML = `
@@ -2461,6 +2463,68 @@
                 </div>
             `;
         }
+        
+        // Reset request body to original schema example
+        const requestBodyOriginal = document.getElementById('requestBodyOriginal');
+        const requestBody = document.getElementById('requestBody');
+        const requestBodyData = document.getElementById('requestBodyData');
+        const requestBodyDisplay = document.getElementById('requestBodyDisplay');
+        const requestBodyEdit = document.getElementById('requestBodyEdit');
+        
+        if (requestBodyOriginal && requestBody && requestBodyData) {
+            const originalBody = requestBodyOriginal.value;
+            
+            // Update both textareas
+            requestBody.value = originalBody;
+            requestBodyData.value = originalBody;
+            
+            // Update the display view
+            if (requestBodyDisplay) {
+                const highlightedJson = syntaxHighlightJSON(originalBody);
+                const lines = originalBody.split('\n');
+                const lineNumbers = Array.from({length: lines.length}, (_, i) => i + 1).join('\n');
+                
+                requestBodyDisplay.innerHTML = `
+                    <div style="display: flex; background: var(--darker-bg);">
+                        <pre style="padding: 12px 8px; margin: 0; background: var(--darker-bg); color: var(--text-secondary); font-family: 'Monaco', 'Consolas', monospace; font-size: 13px; line-height: 1.5; text-align: right; user-select: none; border-right: 1px solid var(--border-color); min-width: 40px;">${lineNumbers}</pre>
+                        <pre style="flex: 1; padding: 12px; margin: 0; background: var(--dark-bg); color: var(--text-primary); font-family: 'Monaco', 'Consolas', monospace; font-size: 13px; line-height: 1.5; overflow-x: auto;">${highlightedJson}</pre>
+                    </div>
+                `;
+            }
+            
+            // Switch to display mode if in edit mode
+            if (requestBodyEdit && requestBodyDisplay) {
+                requestBodyDisplay.style.display = 'block';
+                requestBodyEdit.style.display = 'none';
+                const editBtn = document.getElementById('editBodyBtn');
+                if (editBtn) {
+                    editBtn.textContent = '✏️ Edit';
+                }
+            }
+        }
+        
+        // Reset all parameter inputs
+        const paramInputs = document.querySelectorAll('.try-it-panel input[id^="param-"]');
+        paramInputs.forEach(input => {
+            input.value = '';
+        });
+        
+        // Clear all custom headers
+        const customHeadersContainer = document.getElementById('customHeadersContainer');
+        if (customHeadersContainer) {
+            customHeadersContainer.innerHTML = `
+                <div style="padding: 12px; background: var(--darker-bg); border: 1px dashed var(--border-color); border-radius: 4px; color: var(--text-secondary); font-size: 13px; text-align: center;">
+                    No custom headers. Click "Add Header" to add one.
+                </div>
+            `;
+        }
+        
+        // Save the reset state
+        if (typeof saveCurrentPanelState === 'function') {
+            saveCurrentPanelState();
+        }
+        
+       // console.log('✨ Try It Out panel reset to original state');
     };
 
     window.copyResponse = function() {

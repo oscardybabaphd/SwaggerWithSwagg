@@ -8,6 +8,8 @@
 ## ✨ Features
 
 - 🎨 **Modern Postman-like Interface** - Clean, organized sidebar with endpoint collections
+- 🤖 **AI-Powered Natural Language Search** - Find endpoints using plain English queries like "create a new customer" or "get user by id 123"
+- ✨ **AI Test Data Generation** - Automatically generate realistic test data that conforms to your API schemas
 - 🔐 **Authorization Management** - Support for Bearer tokens, API keys, OAuth2
 - 🚀 **Try It Out Panel** - Execute API requests with automatic request/response caching
 - 📁 **File Upload Support** - Single, multiple, and file with metadata uploads
@@ -69,6 +71,70 @@ app.Run();
 ```
 
 **Access your API documentation at:** `http://localhost:<port>/swagger`
+
+> 💡 **AI Features:** After accessing the UI, click the "AI Setup" button to configure OpenAI integration for natural language search and test data generation.
+
+---
+
+## 🤖 AI-Powered Features
+
+SwaggerWithSwagg includes powerful AI capabilities powered by OpenAI to enhance your API testing workflow.
+
+### Setup
+
+1. Click the **AI Setup** button in the header
+2. Enter your OpenAI API key (get one at [platform.openai.com](https://platform.openai.com/api-keys))
+3. Select your preferred model (GPT-4O Mini recommended for best performance)
+4. Click **Save Configuration**
+
+> 🔒 **Privacy:** Your API key is stored locally in your browser and never sent to our servers. All AI requests go directly from your browser to OpenAI.
+
+### Natural Language Search
+
+Once configured, use the **Ask AI** button to find endpoints using natural language:
+
+**Examples:**
+- `"create a new customer"`
+- `"get user by id 123"`
+- `"update order status"`
+- `"delete product with id 456"`
+- `"list all active customers"`
+
+The AI will:
+- ✅ Find the best matching endpoint
+- ✅ Extract parameters from your query
+- ✅ Show confidence level
+- ✅ Let you execute immediately
+
+### AI Test Data Generation
+
+Generate realistic test data that conforms to your API schemas:
+
+**Explicit Generation:**
+- `"create customer with test data"`
+- `"generate sample order payload"`
+- `"give me example user data"`
+
+**Partial Data Generation:**
+- `"create customer with email oscar@gmail.com"` → AI fills other fields
+- `"make order with status pending and total 99.99"` → AI generates rest
+- `"create user with name John Doe"` → AI adds email, phone, etc.
+
+**Smart Features:**
+- ✨ Preserves user-provided values exactly
+- ✨ Generates realistic data (valid emails, phone numbers, dates)
+- ✨ Respects schema constraints (required fields, enums, formats)
+- ✨ Handles field aliases (fullname → firstName + lastName)
+- ✨ Automatically injects data into Try It Out panel
+
+**Supported Field Patterns:**
+```
+"with email oscar@gmail.com"
+"email: oscar@gmail.com"  
+"email = oscar@gmail.com"
+"fullname Itaba Oscar"     → splits into FirstName + LastName
+"age 25"
+```
 
 ---
 
