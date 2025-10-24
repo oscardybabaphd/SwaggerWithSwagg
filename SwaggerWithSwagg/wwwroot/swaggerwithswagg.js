@@ -1224,6 +1224,14 @@
         
         if (!panel || !overlay) return;
 
+        // Check if this endpoint is already minimized
+        const tabKey = `${method}:${path}`;
+        if (minimizedTabs.has(tabKey)) {
+            // Restore the minimized tab instead of creating a new one
+            restoreMinimizedTab(tabKey);
+            return;
+        }
+
         const op = window.currentOperation;
         if (!op) return;
 
@@ -2626,12 +2634,11 @@
         // Generate unique key for this tab
         const tabKey = `${method}:${path}`;
         
-        // Store the panel state
+        // Store minimal panel state (don't store HTML or full operation to save space)
         minimizedTabs.set(tabKey, {
             method: method,
             path: path,
-            operation: window.currentOperation,
-            html: panel.innerHTML,
+            operationId: window.currentOperation?.operation?.operationId,
             isMaximized: panel.classList.contains('maximized')
         });
 
@@ -2647,7 +2654,7 @@
         updateMinimizedTabsBar();
     };
 
-    window.restoreMinimizedTab = function(tabKey) {
+    window.restoreMinimizedTab = async function(tabKey) {
         const panel = document.getElementById('tryItPanel');
         const overlay = document.getElementById('tryItOverlay');
         
@@ -2656,23 +2663,7 @@
         const tabData = minimizedTabs.get(tabKey);
         if (!tabData) return;
 
-        // Restore panel content
-        panel.innerHTML = tabData.html;
-        window.currentOperation = tabData.operation;
-
-        // Restore maximized state
-        if (tabData.isMaximized) {
-            panel.classList.add('maximized');
-        } else {
-            panel.classList.remove('maximized');
-        }
-
-        // Show the panel
-        panel.classList.remove('minimized');
-        panel.classList.add('open');
-        overlay.style.display = 'block';
-
-        // Remove from minimized tabs
+        // Remove from minimized tabs before rebuilding
         minimizedTabs.delete(tabKey);
 
         // Save to localStorage
@@ -2680,6 +2671,39 @@
 
         // Update minimized tabs bar
         updateMinimizedTabsBar();
+
+        try {
+            // Get the swagger spec to rebuild the operation
+            const spec = await getSwaggerSpec();
+            const pathItem = spec.paths[tabData.path];
+            
+            if (!pathItem || !pathItem[tabData.method.toLowerCase()]) {
+                console.error('Endpoint not found:', tabData.method, tabData.path);
+                return;
+            }
+
+            const operation = pathItem[tabData.method.toLowerCase()];
+            
+            // Set window.currentOperation before opening the panel
+            window.currentOperation = {
+                method: tabData.method,
+                path: tabData.path,
+                operation: operation,
+                spec: spec
+            };
+
+            // Rebuild the panel with fresh content
+            openTryItPanel(tabData.method, tabData.path, tabData.operationId);
+
+            // Restore maximized state after panel is rebuilt
+            setTimeout(() => {
+                if (tabData.isMaximized) {
+                    panel.classList.add('maximized');
+                }
+            }, 50);
+        } catch (e) {
+            console.error('Failed to restore minimized tab:', e);
+        }
     };
 
     window.closeMinimizedTab = function(tabKey, event) {
