@@ -1431,6 +1431,187 @@ namespace SwaggerWithSwagg
             color: #f44336;
         }}
 
+        /* AI Natural Language Search Styles */
+        .ai-setup-button {{
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+        }}
+
+        .ai-setup-button:hover {{
+            background: linear-gradient(135deg, #5568d3 0%, #63408a 100%);
+            transform: translateY(-1px);
+        }}
+
+        .ai-search-container {{
+            padding: 12px;
+            background: var(--darker-bg);
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 12px;
+        }}
+
+        .ai-search-box {{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--dark-bg);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 10px 12px;
+            transition: all 0.3s;
+        }}
+
+        .ai-search-box:focus-within {{
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }}
+
+        .ai-search-box .ai-icon {{
+            color: #667eea;
+            flex-shrink: 0;
+            animation: ai-pulse 2s ease-in-out infinite;
+        }}
+
+        @keyframes ai-pulse {{
+            0%, 100% {{ opacity: 1; }}
+            50% {{ opacity: 0.6; }}
+        }}
+
+        .ai-search-box input {{
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 13px;
+            outline: none;
+        }}
+
+        .ai-search-box input::placeholder {{
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }}
+
+        .ai-search-button {{
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 6px;
+            padding: 6px 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }}
+
+        .ai-search-button:hover {{
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }}
+
+        .ai-search-button svg {{
+            stroke: white;
+        }}
+
+        .ai-search-results {{
+            margin-top: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }}
+
+        .ai-result-item {{
+            background: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }}
+
+        .ai-result-item:hover {{
+            border-color: #667eea;
+            background: var(--hover-bg);
+            transform: translateX(4px);
+        }}
+
+        .ai-result-header {{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }}
+
+        .ai-result-confidence {{
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-left: auto;
+        }}
+
+        .ai-result-path {{
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-family: 'Monaco', 'Consolas', monospace;
+            margin-bottom: 4px;
+        }}
+
+        .ai-result-description {{
+            font-size: 12px;
+            color: var(--text-primary);
+            opacity: 0.8;
+        }}
+
+        .ai-loading {{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            gap: 8px;
+        }}
+
+        .ai-loading-spinner {{
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-color);
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }}
+
+        @keyframes spin {{
+            to {{ transform: rotate(360deg); }}
+        }}
+
+        .ai-error {{
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            border-radius: 6px;
+            padding: 12px;
+            color: #f44336;
+            font-size: 12px;
+        }}
+
+        .ai-status-success {{
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            color: #4caf50;
+        }}
+
+        .ai-status-error {{
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            color: #f44336;
+        }}
+
+        .ai-status-info {{
+            background: rgba(33, 150, 243, 0.1);
+            border: 1px solid rgba(33, 150, 243, 0.3);
+            color: #2196f3;
+        }}
+
         .try-it-panel-header {{
             padding: 24px;
             border-bottom: 1px solid var(--border-color);
@@ -1600,6 +1781,20 @@ namespace SwaggerWithSwagg
         </h1>
         <div class=""header-controls"">
             {GetVersionSelectorHtml()}
+            <button class=""auth-button"" onclick=""openAskAIModal()"" title=""Ask AI"" id=""askAIButton"" style=""display: none; background: linear-gradient(135deg, #10b981 0%, #059669 100%);"">
+                <svg xmlns=""http://www.w3.org/2000/svg"" width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2"">
+                    <path d=""M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z""></path>
+                </svg>
+                <span>Ask AI</span>
+            </button>
+            <button class=""auth-button ai-setup-button"" onclick=""openAISetupModal()"" title=""AI Setup"" id=""aiSetupButton"">
+                <svg xmlns=""http://www.w3.org/2000/svg"" width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2"">
+                    <path d=""M12 2L2 7l10 5 10-5-10-5z""></path>
+                    <path d=""M2 17l10 5 10-5""></path>
+                    <path d=""M2 12l10 5 10-5""></path>
+                </svg>
+                <span>AI Setup</span>
+            </button>
             <button class=""auth-button"" onclick=""openAuthModal()"" title=""Authorization"" id=""authButton"">
                 <svg xmlns=""http://www.w3.org/2000/svg"" width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2"">
                     <rect x=""3"" y=""11"" width=""18"" height=""11"" rx=""2"" ry=""2""></rect>
@@ -1614,9 +1809,6 @@ namespace SwaggerWithSwagg
                     </svg>
                 </span>
             </button>
-            <div class=""header-badge"">
-                SwaggerWithSwagg
-            </div>
         </div>
     </div>
 
@@ -1640,6 +1832,136 @@ namespace SwaggerWithSwagg
                 <button class=""auth-modal-button auth-modal-button-secondary"" onclick=""closeAuthModal()"">Cancel</button>
                 <button class=""auth-modal-button auth-modal-button-primary"" onclick=""saveAuth()"">Authorize</button>
                 <button class=""auth-modal-button auth-modal-button-danger"" onclick=""clearAuth()"">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Setup Modal -->
+    <div class=""auth-modal"" id=""aiSetupModal"" style=""display: none;"">
+        <div class=""auth-modal-content"">
+            <div class=""auth-modal-header"">
+                <h2>
+                    <svg xmlns=""http://www.w3.org/2000/svg"" width=""20"" height=""20"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2"">
+                        <path d=""M12 2L2 7l10 5 10-5-10-5z""></path>
+                        <path d=""M2 17l10 5 10-5""></path>
+                        <path d=""M2 12l10 5 10-5""></path>
+                    </svg>
+                    AI Natural Language Setup
+                </h2>
+                <button class=""auth-modal-close"" onclick=""closeAISetupModal()"">&times;</button>
+            </div>
+            <div class=""auth-modal-body"">
+                <p class=""auth-modal-description"">
+                    Enable natural language queries like &quot;create a new user with email test@example.com&quot; to automatically find and execute the right API endpoint.
+                </p>
+                <div class=""auth-scheme"">
+                    <div class=""auth-scheme-header"">
+                        <h3>OpenAI API Configuration</h3>
+                    </div>
+                    <div class=""auth-input-group"">
+                        <label for=""aiApiKey"">
+                            <strong>API Key</strong>
+                            <span style=""color: var(--error-color);"">*</span>
+                        </label>
+                        <input 
+                            type=""password"" 
+                            id=""aiApiKey"" 
+                            placeholder=""sk-...""
+                            value=""""
+                        />
+                        <small style=""color: var(--text-secondary); margin-top: 4px; display: block;"">
+                            Get your API key from 
+                            <a href=""https://platform.openai.com/api-keys"" target=""_blank"" style=""color: var(--primary-color);"">
+                                OpenAI Platform
+                            </a>
+                        </small>
+                    </div>
+                    <div class=""auth-input-group"">
+                        <label for=""aiModel"">
+                            <strong>Model</strong>
+                        </label>
+                        <select id=""aiModel"">
+                            <option value=""gpt-4o-mini"">GPT-4O Mini (Recommended - Faster & Cheaper)</option>
+                            <option value=""gpt-4o"">GPT-4O (More Accurate)</option>
+                            <option value=""gpt-3.5-turbo"">GPT-3.5 Turbo (Legacy)</option>
+                        </select>
+                        <small style=""color: var(--text-secondary); margin-top: 4px; display: block;"">
+                            GPT-4O Mini is recommended for best price/performance ratio
+                        </small>
+                    </div>
+                    <div class=""auth-input-group"">
+                        <label>
+                            <input type=""checkbox"" id=""aiEnabled"" checked />
+                            <strong>Enable AI Natural Language Search</strong>
+                        </label>
+                        <small style=""color: var(--text-secondary); margin-top: 4px; display: block;"">
+                            When enabled, you can type natural language queries in the search bar
+                        </small>
+                    </div>
+                    <div id=""aiStatus"" style=""margin-top: 12px; padding: 8px; border-radius: 4px; display: none;"">
+                        <!-- Status messages will appear here -->
+                    </div>
+                </div>
+            </div>
+            <div class=""auth-modal-footer"">
+                <button class=""auth-modal-button auth-modal-button-secondary"" onclick=""closeAISetupModal()"">Cancel</button>
+                <button class=""auth-modal-button auth-modal-button-primary"" onclick=""saveAIConfig()"">Save Configuration</button>
+                <button class=""auth-modal-button auth-modal-button-danger"" onclick=""clearAIConfig()"">Clear & Disable</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ask AI Modal -->
+    <div class=""auth-modal"" id=""askAIModal"" style=""display: none;"">
+        <div class=""auth-modal-content"" style=""max-width: 700px;"">
+            <div class=""auth-modal-header"">
+                <h2>
+                    <svg xmlns=""http://www.w3.org/2000/svg"" width=""20"" height=""20"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2"">
+                        <path d=""M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z""></path>
+                    </svg>
+                    Ask AI - Natural Language Query
+                </h2>
+                <button class=""auth-modal-close"" onclick=""closeAskAIModal()"">&times;</button>
+            </div>
+            <div class=""auth-modal-body"" style=""max-height: 600px; overflow-y: auto;"">
+                <p class=""auth-modal-description"">
+                    Type your question in plain English. For example: &quot;create a new user&quot;, &quot;get all customers&quot;, or &quot;get order by id 123&quot;
+                </p>
+                
+                <div style=""margin-bottom: 20px;"">
+                    <div class=""ai-search-box"" style=""margin: 0; border: 2px solid var(--border-color);"">
+                        <svg xmlns=""http://www.w3.org/2000/svg"" width=""18"" height=""18"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2"" class=""ai-icon"">
+                            <path d=""M12 2L2 7l10 5 10-5-10-5z""></path>
+                            <path d=""M2 17l10 5 10-5""></path>
+                            <path d=""M2 12l10 5 10-5""></path>
+                        </svg>
+                        <input 
+                            type=""text"" 
+                            id=""askAIInput"" 
+                            placeholder=""e.g., 'create a new user with email test@example.com'""
+                            onkeypress=""if(event.key==='Enter') handleAskAISearch()""
+                            style=""flex: 1; background: transparent; border: none; color: var(--text-primary); font-size: 14px; outline: none;""
+                        />
+                        <button onclick=""handleAskAISearch()"" class=""ai-search-button"" title=""Search with AI"">
+                            <svg xmlns=""http://www.w3.org/2000/svg"" width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2"">
+                                <circle cx=""11"" cy=""11"" r=""8""></circle>
+                                <line x1=""21"" y1=""21"" x2=""16.65"" y2=""16.65""></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div id=""askAIResults"" style=""min-height: 100px;"">
+                    <div style=""text-align: center; padding: 40px 20px; color: var(--text-secondary);"">
+                        <svg xmlns=""http://www.w3.org/2000/svg"" width=""48"" height=""48"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2"" style=""margin-bottom: 16px; opacity: 0.5;"">
+                            <path d=""M12 2L2 7l10 5 10-5-10-5z""></path>
+                            <path d=""M2 17l10 5 10-5""></path>
+                            <path d=""M2 12l10 5 10-5""></path>
+                        </svg>
+                        <p>Type your question above and press Enter or click the search button</p>
+                        <p style=""font-size: 12px; margin-top: 8px; opacity: 0.7;"">AI will find the best matching endpoint for your query</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1731,6 +2053,7 @@ namespace SwaggerWithSwagg
     <script src=""/{_options.RoutePrefix}/swagger-ui-bundle.min.js""></script>
     <script src=""/{_options.RoutePrefix}/swagger-ui-standalone-preset.min.js""></script>
     <script src=""/{_options.RoutePrefix}/swaggerwithswagg.js""></script>
+    <script src=""/{_options.RoutePrefix}/ai-nlp.js""></script>
     <script>
         // Theme Management
         const THEME_KEY = 'swaggerwithswagg-theme';
