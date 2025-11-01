@@ -44,6 +44,9 @@ namespace SwaggerWithSwagg
 
             // Add custom filter to extract Minimal API metadata (Summary and Description)
             options.OperationFilter<MinimalApiMetadataFilter>();
+            
+            // Add filter to mark [Obsolete] endpoints as deprecated
+            options.OperationFilter<ObsoleteOperationFilter>();
         }
 
         /// <summary>

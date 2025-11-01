@@ -119,4 +119,51 @@ public class CustomersController : ControllerBase
         DataStore.GetCustomers().Remove(customer);
         return NoContent();
     }
+
+    /// <summary>
+    /// Get customer statistics (DEPRECATED - Use GET /api/analytics/customer/{id} instead)
+    /// </summary>
+    /// <param name="id">Customer ID</param>
+    /// <returns>Customer statistics</returns>
+    [Obsolete("This endpoint is deprecated. Use GET /api/analytics/customer/{id} instead. This endpoint will be removed in v2.0.")]
+    [HttpGet("{id}/stats")]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public IActionResult GetCustomerStats(Guid id)
+    {
+        var customer = DataStore.GetCustomers().FirstOrDefault(c => c.Id == id);
+        if (customer == null)
+            return NotFound(new { message = "Customer not found" });
+
+        return Ok(new
+        {
+            customerId = customer.Id,
+            totalOrders = 0,
+            lifetimeValue = 0.0m,
+            lastOrderDate = (DateTime?)null,
+            note = "This endpoint is deprecated. Please use the new Analytics API."
+        });
+    }
+
+    /// <summary>
+    /// Update customer email (DEPRECATED - Use PUT /api/customers/{id} instead)
+    /// </summary>
+    /// <param name="id">Customer ID</param>
+    /// <param name="newEmail">New email address</param>
+    /// <returns>Updated customer</returns>
+    [Obsolete("Use PUT /api/customers/{id} with the full update model instead.")]
+    [HttpPatch("{id}/email")]
+    [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public IActionResult UpdateCustomerEmail(Guid id, [FromBody] string newEmail)
+    {
+        var customer = DataStore.GetCustomers().FirstOrDefault(c => c.Id == id);
+        if (customer == null)
+            return NotFound(new { message = "Customer not found" });
+
+        customer.Email = newEmail;
+        customer.UpdatedAt = DateTime.UtcNow;
+
+        return Ok(customer);
+    }
 }

@@ -223,6 +223,9 @@
                 const operationSecurity = endpoint.security !== undefined ? endpoint.security : globalSecurity;
                 const requiresAuth = operationSecurity.length > 0;
                 
+                // Check if endpoint is deprecated/obsolete
+                const isDeprecated = endpoint.deprecated === true;
+                
                 tags.forEach(tag => {
                     if (!groupedEndpoints[tag]) {
                         groupedEndpoints[tag] = [];
@@ -232,7 +235,8 @@
                         method: method.toUpperCase(),
                         summary: endpoint.summary || endpoint.operationId || path,
                         operationId: endpoint.operationId,
-                        requiresAuth: requiresAuth
+                        requiresAuth: requiresAuth,
+                        deprecated: isDeprecated
                     });
                 });
             });
@@ -255,11 +259,15 @@
                         <path d="M7 11V7a5 5 0 0 1 9.9-1"></path>
                        </svg>`;
                 
+                const deprecatedClass = ep.deprecated ? 'deprecated' : '';
+                const deprecatedBadge = ep.deprecated ? '<span class="deprecated-badge" title="This endpoint is deprecated">DEPRECATED</span>' : '';
+                
                 return `
-                    <li class="endpoint-item ${ep.requiresAuth ? 'requires-auth' : 'anonymous'}" data-path="${escapeHtml(ep.path)}" data-method="${escapeHtml(ep.method)}" data-tag="${escapeHtml(tag)}" onclick="scrollToEndpoint('${escapeHtml(ep.operationId || ep.path)}', '${escapeHtml(ep.method)}', '${escapeHtml(ep.path)}')">
+                    <li class="endpoint-item ${ep.requiresAuth ? 'requires-auth' : 'anonymous'} ${deprecatedClass}" data-path="${escapeHtml(ep.path)}" data-method="${escapeHtml(ep.method)}" data-tag="${escapeHtml(tag)}" onclick="scrollToEndpoint('${escapeHtml(ep.operationId || ep.path)}', '${escapeHtml(ep.method)}', '${escapeHtml(ep.path)}')">
                         ${lockIcon}
                         <span class="endpoint-method ${methodClass}">${ep.method}</span>
                         <span class="endpoint-path">${escapeHtml(ep.path)}</span>
+                        ${deprecatedBadge}
                     </li>
                 `;
             }).join('');
@@ -293,8 +301,41 @@
         header.classList.toggle('expanded');
     };
 
+    // Highlight selected endpoint in sidebar
+    function highlightEndpointInSidebar(path, method) {
+        // Remove existing highlights
+        document.querySelectorAll('.endpoint-item.active').forEach(el => {
+            el.classList.remove('active');
+        });
+        
+        // Find and highlight the target endpoint
+        const selector = `.endpoint-item[data-path="${path}"][data-method="${method}"]`;
+        const item = document.querySelector(selector);
+        
+        if (item) {
+            item.classList.add('active');
+            
+            // Expand the folder if collapsed
+            const folderEndpoints = item.closest('.folder-endpoints');
+            if (folderEndpoints && !folderEndpoints.classList.contains('expanded')) {
+                const folderId = folderEndpoints.id;
+                if (folderId) {
+                    toggleFolder(folderId);
+                }
+            }
+            
+            // Scroll into view
+            setTimeout(() => {
+                item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+    }
+
     // Show endpoint detail in the main area
     window.scrollToEndpoint = async function(operationId, method, path) {
+        // Highlight the endpoint in the sidebar
+        highlightEndpointInSidebar(path, method);
+        
         // Hide welcome message
         const welcomeMessage = document.getElementById('welcomeMessage');
         if (welcomeMessage) {
@@ -358,6 +399,9 @@
         const operationSecurity = operation.security || spec.security || [];
         const requiresAuth = operationSecurity.length > 0;
         
+        // Check if deprecated
+        const isDeprecated = operation.deprecated === true;
+        
         let securityBadges = '';
         if (requiresAuth) {
             operationSecurity.forEach(secReq => {
@@ -371,6 +415,11 @@
                 });
             });
         }
+        
+        // Add deprecated badge
+        if (isDeprecated) {
+            securityBadges += '<span class="deprecated-badge-large" title="This endpoint is deprecated and may be removed in future versions">⚠️ DEPRECATED</span>';
+        }
 
         let html = `
             <div class="detail-header">
@@ -379,6 +428,7 @@
                     <span class="detail-path">${path}</span>
                     ${securityBadges}
                 </div>
+                ${isDeprecated ? '<div class="deprecated-warning">⚠️ <strong>Warning:</strong> This endpoint is deprecated and may be removed in future versions. Please use alternative endpoints.</div>' : ''}
                 ${summary ? `<div class="detail-summary">${escapeHtml(summary)}</div>` : ''}
                 ${description ? `<div class="detail-description">${escapeHtml(description)}</div>` : ''}
             </div>

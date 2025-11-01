@@ -760,11 +760,13 @@ namespace SwaggerWithSwagg
         .endpoint-item {{
             padding: 10px 20px 10px 45px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
             border-left: 3px solid transparent;
             display: flex;
             align-items: center;
             gap: 10px;
+            position: relative;
+            left: 0;
         }}
 
         .endpoint-lock {{
@@ -805,6 +807,19 @@ namespace SwaggerWithSwagg
 
         .endpoint-item.highlight {{
             background: rgba(255, 108, 55, 0.15);
+        }}
+
+        .endpoint-item.active {{
+            background: rgba(97, 175, 254, 0.2);
+            border-left-color: #61affe !important;
+            font-weight: 600;
+            left: -8px;
+            padding-left: 53px;
+            box-shadow: 2px 0 8px rgba(97, 175, 254, 0.3);
+        }}
+
+        .endpoint-item.active .endpoint-path {{
+            color: var(--primary-color);
         }}
 
         .endpoint-method {{
@@ -1169,6 +1184,65 @@ namespace SwaggerWithSwagg
             margin-left: 8px;
             letter-spacing: 0.5px;
             cursor: help;
+        }}
+
+        .deprecated-badge {{
+            display: inline-block;
+            background: #ff9800;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-left: 6px;
+            letter-spacing: 0.3px;
+            cursor: help;
+        }}
+
+        .deprecated-badge-large {{
+            display: inline-block;
+            background: #ff9800;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-left: 8px;
+            letter-spacing: 0.5px;
+            cursor: help;
+        }}
+
+        .deprecated-warning {{
+            background: rgba(255, 152, 0, 0.1);
+            border-left: 4px solid #ff9800;
+            color: var(--text-primary);
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-top: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+        }}
+
+        .deprecated-warning strong {{
+            color: #ff9800;
+        }}
+
+        .endpoint-item.deprecated {{
+            opacity: 0.7;
+            background: rgba(255, 152, 0, 0.05);
+        }}
+
+        .endpoint-item.deprecated:hover {{
+            opacity: 1;
+            background: rgba(255, 152, 0, 0.1);
+        }}
+
+        .endpoint-item.deprecated .endpoint-path {{
+            text-decoration: line-through;
+            text-decoration-color: rgba(255, 152, 0, 0.5);
+            text-decoration-thickness: 1px;
         }}
 
         .detail-summary {{
