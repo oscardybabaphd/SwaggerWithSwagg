@@ -112,6 +112,11 @@ namespace SwaggerWithSwagg
         /// Custom CSS for additional styling
         /// </summary>
         public string? CustomCss { get; set; }
+
+        /// <summary>
+        /// HTML value for api version selector
+        /// </summary>
+        internal string? VersionSelectorString { get; set; }
     }
 
     /// <summary>
