@@ -109,14 +109,13 @@ namespace SwaggerWithSwagg
             _options.VersionSelectorString = GetVersionSelectorHtml();
 
             string html = GetEmbeddedResource("index-template.html");
-            var props = _options.GetType().GetProperties(BindingFlags.Default | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Where(a => a.PropertyType != typeof(List<SwaggerVersion>));
+            var props = _options.GetType()
+                                .GetProperties(BindingFlags.Default | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                                .Where(a => a.PropertyType != typeof(List<SwaggerVersion>));
             
             foreach (var prop in props)
             {
                 var value = prop.GetValue(_options) ?? "";
-                if (string.IsNullOrEmpty(value.ToString()))
-                    continue;
-
                 html = html.Replace($"[[{prop.Name}]]", value.ToString(), StringComparison.InvariantCultureIgnoreCase);
             }
 
