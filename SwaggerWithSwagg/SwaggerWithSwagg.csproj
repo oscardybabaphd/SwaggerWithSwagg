@@ -1,74 +1,86 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <!-- Multi-targeting for .NET 6, 7, 8, and 9 -->
-    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <LangVersion>latest</LangVersion>
-    
-    <!-- Disable API documentation generation (this is a library, not an API) -->
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>$(NoWarn);1591</NoWarn>
-    <IsPackable>true</IsPackable>
-    <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
-    
-    <!-- NuGet Package Settings -->
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageId>SwaggerWithSwagg</PackageId>
-    <Version>1.0.2</Version>
-    <Authors>Itaba Oscar</Authors>
-    <Company>Itaba Oscar</Company>
-    <Description>Enhanced Swagger UI middleware for ASP.NET Core with a modern Postman-like interface. Features include per-endpoint request caching, authorization management, API versioning, file uploads, dark/light themes, and Try It Out panel for testing APIs directly in the documentation. Compatible with .NET 6, 7, 8, and 9.</Description>
-    <PackageTags>swagger;openapi;api;documentation;postman;aspnetcore;middleware;swagger-ui;api-testing;api-documentation;net6;net7;net8;net9</PackageTags>
-    <PackageProjectUrl>https://github.com/oscardybabaphd/SwaggerWithSwagg</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/oscardybabaphd/SwaggerWithSwagg</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>See https://github.com/oscardybabaphd/SwaggerWithSwagg/releases</PackageReleaseNotes>
-    <Copyright>Copyright (c) 2025 Itaba Oscar</Copyright>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-  </PropertyGroup>
+	<PropertyGroup>
+		<!-- Multi-targeting for .NET 6, 7, 8, 9, and 10 -->
+		<TargetFrameworks>net6.0;net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
 
-  <!-- Common dependencies for all frameworks -->
-  <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0">
-      <ExcludeAssets>Build</ExcludeAssets>
-    </PackageReference>
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
-  </ItemGroup>
+		<!-- Disable API documentation generation (this is a library, not an API) -->
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>$(NoWarn);1591</NoWarn>
+		<IsPackable>true</IsPackable>
+		<GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
 
-  <!-- .NET 6 specific dependencies -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.0" />
-  </ItemGroup>
+		<!-- NuGet Package Settings -->
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageId>SwaggerWithSwagg</PackageId>
+		<Version>1.0.2</Version>
+		<Authors>Itaba Oscar</Authors>
+		<Company>Itaba Oscar</Company>
+		<Description>Enhanced Swagger UI middleware for ASP.NET Core with a modern Postman-like interface. Features include per-endpoint request caching, authorization management, API versioning, file uploads, dark/light themes, and Try It Out panel for testing APIs directly in the documentation. Compatible with .NET 6 to 10.</Description>
+		<PackageTags>swagger;openapi;api;documentation;postman;aspnetcore;middleware;swagger-ui;api-testing;api-documentation;net6;net7;net8;net9;net10</PackageTags>
+		<PackageProjectUrl>https://github.com/oscardybabaphd/SwaggerWithSwagg</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/oscardybabaphd/SwaggerWithSwagg</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageReleaseNotes>See https://github.com/oscardybabaphd/SwaggerWithSwagg/releases</PackageReleaseNotes>
+		<Copyright>Copyright (c) 2025 Itaba Oscar</Copyright>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+	</PropertyGroup>
 
-  <!-- .NET 7 specific dependencies -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="7.0.0" />
-  </ItemGroup>
+	<!-- Common dependencies for all frameworks -->
+	<ItemGroup>
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0">
+			<ExcludeAssets>Build</ExcludeAssets>
+		</PackageReference>
+		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
+	</ItemGroup>
 
-  <!-- .NET 8 specific dependencies -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.0" />
-  </ItemGroup>
+	<!-- .NET 6 specific dependencies -->
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.0" />
+	</ItemGroup>
 
-  <!-- .NET 9 specific dependencies -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="9.0.0" />
-  </ItemGroup>
+	<!-- .NET 7 specific dependencies -->
+	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="7.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="wwwroot\**\*" />
-  </ItemGroup>
+	<!-- .NET 8 specific dependencies -->
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\README.md" Pack="true" PackagePath="\" />
-  </ItemGroup>
+	<!-- .NET 9 specific dependencies -->
+	<ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="9.0.0" />
+	</ItemGroup>
+
+	<!-- .NET 10 specific dependencies -->
+	<ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="wwwroot\**\*" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="wwwroot\index-template.html">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	</ItemGroup>
 
 </Project>
